@@ -1,8 +1,11 @@
+// jscs:disable
+
 var Funnel = require('broccoli-funnel');
 var mergeTrees = require('broccoli-merge-trees');
 var Babel = require('broccoli-babel-transpiler');
 var concat   = require('broccoli-sourcemap-concat');
 var JSHint = require('broccoli-jshint');
+var JSCS = require('broccoli-jscs');
 
 module.exports = function() {
   // --- Dependencies ---
@@ -33,9 +36,11 @@ module.exports = function() {
   });
 
   var libJSHint = new JSHint(lib);
+  var libJSCS = new JSCS(lib);
   var testJSHint = new JSHint(tests);
+  var testJSCS = new JSCS(tests);
 
-  var main = mergeTrees([klassy, lib, tests, libJSHint, testJSHint]);
+  var main = mergeTrees([klassy, lib, tests, libJSHint, testJSHint, libJSCS, testJSCS]);
 
   // --- Compile ES6 modules ---
 

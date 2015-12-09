@@ -23,11 +23,13 @@
   "devDependencies": {
     "broccoli-babel-transpiler": "^5.4.5",
     "broccoli-funnel": "^0.2.13",
+    "broccoli-jscs": "^1.2.2",
     "broccoli-jshint": "^1.1.1",
     "broccoli-merge-trees": "^0.1.4",
     "broccoli-sourcemap-concat": "^0.4.3",
     "ember-cli": "1.13.13",
     "ember-cli-release": "^0.2.4",
+    "ember-suave": "1.2.3",
     "ember-try": "0.0.8"
   }
 }
