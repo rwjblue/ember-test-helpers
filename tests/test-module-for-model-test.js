@@ -6,24 +6,24 @@ import Ember from 'ember';
 import DS from 'ember-data';
 
 function moduleForModel(name, description, callbacks) {
-  var module = new TestModuleForModel(name, description, callbacks);
+  let module = new TestModuleForModel(name, description, callbacks);
   qunitModuleFor(module);
 }
 
-var server;
+let server;
 
-var adapter = DS.JSONAPIAdapter || DS.FixtureAdapter;
+let adapter = DS.JSONAPIAdapter || DS.FixtureAdapter;
 
-var Whazzit = DS.Model.extend({ gear: DS.attr('string') });
-var whazzitAdapterFindAllCalled = false;
-var WhazzitAdapter = adapter.extend({
+let Whazzit = DS.Model.extend({ gear: DS.attr('string') });
+let whazzitAdapterFindAllCalled = false;
+let WhazzitAdapter = adapter.extend({
   findAll: function() {
     whazzitAdapterFindAllCalled = true;
     return this._super.apply(this, arguments);
   }
 });
 
-var ApplicationAdapter = adapter.extend();
+let ApplicationAdapter = adapter.extend();
 
 function setupRegistry() {
   setResolverRegistry({
@@ -35,7 +35,7 @@ function setupRegistry() {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-var store1, store2;
+let store1, store2;
 moduleForModel('whazzit', 'model:whazzit without adapter', {
   beforeSetup: function() {
     setupRegistry();
@@ -65,7 +65,7 @@ test('store exists: 2', function() {
 });
 
 test('model exists as subject', function() {
-  var model = this.subject();
+  let model = this.subject();
 
   ok(model);
   ok(model instanceof DS.Model);
@@ -73,7 +73,7 @@ test('model exists as subject', function() {
 });
 
 test('JSONAPIAdapter (ED >= 2) or FixtureAdapter (ED < 2) is registered for model', function() {
-  var model = this.subject(),
+  let model = this.subject(),
       store = this.store();
 
   ok(store.adapterFor(model.constructor.modelName) instanceof adapter);
@@ -86,8 +86,8 @@ moduleForModel('whazzit', 'subject does not share the store', {
   },
 
   teardown: function() {
-    var model = this.subject();
-    var store = this.store();
+    let model = this.subject();
+    let store = this.store();
 
     equal(model.store, store, 'is created from the correct store instance');
   }
@@ -127,7 +127,7 @@ moduleForModel('whazzit', 'model:whazzit with custom adapter', {
 });
 
 test('WhazzitAdapter is registered for model', function() {
-  var model = this.subject(),
+  let model = this.subject(),
       store = this.store();
 
   ok(store.adapterFor(model.constructor.modelName) instanceof WhazzitAdapter);
@@ -137,7 +137,7 @@ test('WhazzitAdapter is used for `findAll`', function() {
   expect(2);
   ok(!whazzitAdapterFindAllCalled, 'precond - custom adapter has not yet been called');
 
-  var store = this.store();
+  let store = this.store();
 
   return Ember.run(function() {
     return store.findAll('whazzit', { reload: true }).then(function() {
@@ -161,7 +161,7 @@ moduleForModel('whazzit', 'model:whazzit with application adapter', {
 });
 
 test('ApplicationAdapter is registered for model', function() {
-  var model = this.subject(),
+  let model = this.subject(),
       store = this.store();
 
   ok(store.adapterFor(model.constructor.modelName) instanceof ApplicationAdapter);
@@ -181,7 +181,7 @@ moduleForModel('whazzit', 'model:whazzit when using integration:true', {
 });
 
 test('the store still exists', function() {
-  var store = this.store();
+  let store = this.store();
 
   ok(store instanceof DS.Store);
 });

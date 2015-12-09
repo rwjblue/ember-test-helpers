@@ -4,10 +4,10 @@ import test from 'tests/test-support/qunit-test';
 import qunitModuleFor from 'tests/test-support/qunit-module-for';
 import wait from 'ember-test-helpers/wait';
 
-var $ = Ember.$;
+let $ = Ember.$;
 
 function moduleForComponent(name, description, callbacks) {
-  var module = new TestModuleForComponent(name, description, callbacks);
+  let module = new TestModuleForComponent(name, description, callbacks);
   qunitModuleFor(module);
 }
 
@@ -47,11 +47,11 @@ moduleForComponent('wait helper tests', {
       internalValue: '',
 
       click: function() {
-        var component = this;
+        let component = this;
 
         $.ajax('/whazzits', { cache: false })
           .then(function(data) {
-            var value = component.get('internalValue');
+            let value = component.get('internalValue');
 
             Ember.run(component, 'set', 'internalValue', value + data);
           });
@@ -64,7 +64,7 @@ moduleForComponent('wait helper tests', {
       internalValue: '',
 
       click: function() {
-        var component = this;
+        let component = this;
 
         Ember.run.later(function() {
           Ember.run(component, 'set', 'internalValue', 'Local Data!');
@@ -72,7 +72,7 @@ moduleForComponent('wait helper tests', {
 
         $.ajax('/whazzits', { cache: false })
           .then(function(data) {
-            var value = component.get('internalValue');
+            let value = component.get('internalValue');
 
             Ember.run(component, 'set', 'internalValue', value + data);
 
@@ -82,7 +82,7 @@ moduleForComponent('wait helper tests', {
                 .then(function(data) {
                   if (component.isDestroyed) { return; }
 
-                  var value = component.get('internalValue');
+                  let value = component.get('internalValue');
 
                   Ember.run(component, 'set', 'internalValue', value + data);
                 });
@@ -110,7 +110,7 @@ moduleForComponent('wait helper tests', {
 });
 
 test('it works when async exists in `init`', function() {
-  var testContext = this;
+  let testContext = this;
 
   this.render('{{x-test-1}}');
 
@@ -121,7 +121,7 @@ test('it works when async exists in `init`', function() {
 });
 
 test('it works when async exists in an event/action', function() {
-  var testContext = this;
+  let testContext = this;
 
   this.render('{{x-test-2}}');
 
@@ -136,7 +136,7 @@ test('it works when async exists in an event/action', function() {
 });
 
 test('it waits for AJAX requests to finish', function() {
-  var testContext = this;
+  let testContext = this;
 
   this.render('{{x-test-3}}');
 
@@ -149,7 +149,7 @@ test('it waits for AJAX requests to finish', function() {
 });
 
 test('it waits for interleaved AJAX and run loops to finish', function() {
-  var testContext = this;
+  let testContext = this;
 
   this.render('{{x-test-4}}');
 
@@ -162,7 +162,7 @@ test('it waits for interleaved AJAX and run loops to finish', function() {
 });
 
 test('it can wait only for AJAX', function() {
-  var testContext = this;
+  let testContext = this;
 
   this.render('{{x-test-4}}');
 
@@ -175,7 +175,7 @@ test('it can wait only for AJAX', function() {
 });
 
 test('it can wait only for timers', function() {
-  var testContext = this;
+  let testContext = this;
 
   this.render('{{x-test-4}}');
 

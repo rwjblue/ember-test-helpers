@@ -5,14 +5,14 @@ import test from 'tests/test-support/qunit-test';
 import qunitModuleFor from 'tests/test-support/qunit-module-for';
 import { setResolverRegistry } from 'tests/test-support/resolver';
 
-var $ = Ember.$;
+let $ = Ember.$;
 
 function moduleForComponent(name, description, callbacks) {
-  var module = new TestModuleForComponent(name, description, callbacks);
+  let module = new TestModuleForComponent(name, description, callbacks);
   qunitModuleFor(module);
 }
 
-var PrettyColor = Ember.Component.extend({
+let PrettyColor = Ember.Component.extend({
   classNames: ['pretty-color'],
   attributeBindings: ['style'],
   style: function(){
@@ -24,7 +24,7 @@ var PrettyColor = Ember.Component.extend({
   }
 });
 
-var ColorController = Ember.Controller.extend({
+let ColorController = Ember.Controller.extend({
   hexa: function() {
     switch( this.get('model') ) {
       case 'red':
@@ -37,16 +37,16 @@ var ColorController = Ember.Controller.extend({
   }.property('model')
 });
 
-var BoringColor = Ember.Component.extend({
+let BoringColor = Ember.Component.extend({
   willDestroyElement: function(){
-    var stateIndicatesInDOM = (this._state === 'inDOM');
-    var actuallyInDOM = Ember.$.contains(document, this.$()[0]);
+    let stateIndicatesInDOM = (this._state === 'inDOM');
+    let actuallyInDOM = Ember.$.contains(document, this.$()[0]);
 
     ok((actuallyInDOM === true) && (actuallyInDOM === stateIndicatesInDOM), 'component should still be in the DOM');
   }
 });
 
-var ChangingColor = Ember.Component.extend({
+let ChangingColor = Ember.Component.extend({
   didInsertElement: function() {
     this.attrs.change('foo');
   }
@@ -65,7 +65,7 @@ function setupRegistry() {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-var originalDeprecate;
+let originalDeprecate;
 moduleForComponent('x-foo', {
   needs: ['controller:color'],
 
@@ -84,7 +84,7 @@ moduleForComponent('x-foo', {
 
 test('renders', function() {
   expect(2);
-  var component = this.subject();
+  let component = this.subject();
   equal(component._state, 'preRender');
   this.render();
   equal(component._state, 'inDOM');
@@ -93,9 +93,9 @@ test('renders', function() {
 test('append', function() {
   expect(4);
 
-  var deprecations = [];
-  var $el;
-  var component;
+  let deprecations = [];
+  let $el;
+  let component;
 
   // capture all deprecations so they can be checked later
   Ember.deprecate = function(message) {
@@ -111,7 +111,7 @@ test('append', function() {
 
 test('yields', function() {
   expect(2);
-  var component = this.subject({
+  let component = this.subject({
     layout: Ember.Handlebars.compile("yield me")
   });
   equal(component._state, 'preRender');
@@ -121,7 +121,7 @@ test('yields', function() {
 
 test('can lookup components in its layout', function() {
   expect(1);
-  var component = this.subject({
+  let component = this.subject({
     layout: Ember.Handlebars.compile("{{x-foo id='yodawg-i-heard-you-liked-x-foo-in-ur-x-foo'}}")
   });
   this.render();
@@ -131,7 +131,7 @@ test('can lookup components in its layout', function() {
 if (hasEmberVersion(1,11)) {
   test('can use the component keyword in its layout', function() {
     expect(1);
-    var component = this.subject({
+    let component = this.subject({
       colors: ['red', 'green', 'blue'],
       layout: Ember.Handlebars.compile("{{component 'x-foo'}}")
     });
@@ -164,7 +164,7 @@ test("className", function(){
 });
 
 test("template", function(){
-  var component = this.subject();
+  let component = this.subject();
 
   equal($.trim(this.$().text()), 'Pretty Color:');
 
@@ -230,7 +230,7 @@ moduleForComponent('pretty-color', 'component:pretty-color - event dispatching w
 test('can handle click', function() {
   expect(1); // assert in pretty-color `click` handler above
 
-  var component = this.subject();
+  let component = this.subject();
 
   this.render();
 
@@ -255,17 +255,17 @@ if (hasEmberVersion(1,13)) {
   });
 }
 
-var testModule;
+let testModule;
 QUnit.module('moduleForComponent: can be invoked with only the component name', {
   beforeEach: function(assert) {
-    var done = assert.async();
+    let done = assert.async();
     setupRegistry();
     testModule = new TestModuleForComponent('pretty-color', { unit: true });
     testModule.setup()['finally'](done);
   },
 
   afterEach: function(assert) {
-    var done = assert.async();
+    let done = assert.async();
     testModule.teardown()['finally'](done);
   }
 });
@@ -274,16 +274,16 @@ test('it allows missing callbacks', function() {
   ok(true, 'no errors are thrown');
 });
 
-var testModule;
+let testModule;
 QUnit.module('moduleForComponent: can be invoked with the component name and description', {
   beforeEach: function(assert) {
-    var done = assert.async();
+    let done = assert.async();
     testModule = new TestModuleForComponent('pretty-color', 'PrettyColor', { unit: true });
     testModule.setup()['finally'](done);
   },
 
   afterEach: function(assert) {
-    var done = assert.async();
+    let done = assert.async();
     testModule.teardown()['finally'](done);
   }
 });
@@ -294,13 +294,13 @@ test('it allows missing callbacks', function() {
 
 QUnit.module('moduleForComponent: handles errors thrown during setup', {
   beforeEach: function(assert) {
-    var done = assert.async();
+    let done = assert.async();
     testModule = new TestModuleForComponent('x-bad', {
       needs: ['mis:sing'],
 
       beforeEach: function(assert) {
         // won't be called because of setup error
-        var done = assert.async();
+        let done = assert.async();
         assert.ok(true);
         done();
       }

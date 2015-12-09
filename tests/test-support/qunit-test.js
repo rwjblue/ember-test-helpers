@@ -3,9 +3,9 @@ import { getContext } from 'ember-test-helpers';
 
 export default function test(testName, callback) {
   function wrapper() {
-    var context = getContext();
+    let context = getContext();
 
-    var result = callback.call(context);
+    let result = callback.call(context);
 
     function failTestOnPromiseRejection(reason) {
       ok(false, reason);

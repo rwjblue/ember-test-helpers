@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import { setResolver } from 'ember-test-helpers';
 
-var Resolver = Ember.DefaultResolver.extend({
+let Resolver = Ember.DefaultResolver.extend({
   registry: null,
 
   resolve: function(fullName) {
@@ -13,7 +13,7 @@ var Resolver = Ember.DefaultResolver.extend({
   }
 });
 
-var resolver = Resolver.create({registry: {}, namespace: {}});
+let resolver = Resolver.create({registry: {}, namespace: {}});
 setResolver(resolver);
 
 export function setResolverRegistry(registry) {

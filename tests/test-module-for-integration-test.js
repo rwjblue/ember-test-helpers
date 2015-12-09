@@ -6,7 +6,7 @@ import qunitModuleFor from 'tests/test-support/qunit-module-for';
 import { setResolverRegistry } from 'tests/test-support/resolver';
 
 function moduleForComponent(name, description, callbacks) {
-  var module = new TestModuleForComponent(name, description, callbacks);
+  let module = new TestModuleForComponent(name, description, callbacks);
   qunitModuleFor(module);
 }
 
@@ -35,14 +35,14 @@ if (hasEmberVersion(1,11)) {
 }
 
 test('it complains if you try to use bare render', function() {
-  var self = this;
+  let self = this;
   throws(function() {
     self.render();
   }, /in a component integration test you must pass a template to `render\(\)`/);
 });
 
 test('it complains if you try to use subject()', function() {
-  var self = this;
+  let self = this;
   throws(function() {
     self.subject();
   }, /component integration tests do not support `subject\(\)`\./);
@@ -58,7 +58,7 @@ test('it can access the full container', function() {
 });
 
 test('it can handle actions', function() {
-  var handlerArg;
+  let handlerArg;
   this.render('<button {{action "didFoo" 42}} />');
   this.on('didFoo', function(thing) {
     handlerArg = thing;
@@ -169,14 +169,14 @@ test('it can setProperties and getProperties', function() {
     bar: 2
   });
   this.render('{{my-component foo=foo bar=bar}}');
-  var properties = this.getProperties('foo', 'bar');
+  let properties = this.getProperties('foo', 'bar');
   equal(properties.foo, '1');
   equal(properties.bar, '2');
   equal(this.$('.foo').text(), '1');
   equal(this.$('.bar').text(), '2');
 });
 
-var origDeprecate;
+let origDeprecate;
 moduleForComponent('Component Integration Tests: implicit views are not deprecated', {
   integration: true,
   setup: function () {
@@ -259,8 +259,8 @@ moduleForComponent('Component Integration Tests: willDestoryElement', {
     setResolverRegistry({
       'component:my-component': Ember.Component.extend({
         willDestroyElement: function() {
-          var stateIndicatesInDOM = (this._state === 'inDOM');
-          var actuallyInDOM = Ember.$.contains(document, this.$()[0]);
+          let stateIndicatesInDOM = (this._state === 'inDOM');
+          let actuallyInDOM = Ember.$.contains(document, this.$()[0]);
 
           ok((actuallyInDOM === true) && (actuallyInDOM === stateIndicatesInDOM), 'component should still be in the DOM');
       }

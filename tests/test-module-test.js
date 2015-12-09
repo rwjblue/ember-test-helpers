@@ -6,7 +6,7 @@ import qunitModuleFor from 'tests/test-support/qunit-module-for';
 import { setResolverRegistry } from 'tests/test-support/resolver';
 
 function moduleFor(fullName, description, callbacks) {
-  var module = new TestModule(fullName, description, callbacks);
+  let module = new TestModule(fullName, description, callbacks);
   qunitModuleFor(module);
 }
 
@@ -24,7 +24,7 @@ function setupRegistry() {
   });
 }
 
-var callbackOrder, setupContext, teardownContext, beforeSetupContext, afterTeardownContext;
+let callbackOrder, setupContext, teardownContext, beforeSetupContext, afterTeardownContext;
 
 moduleFor('component:x-foo', 'TestModule callbacks', {
   beforeSetup: function() {
@@ -109,7 +109,7 @@ moduleFor('component:x-foo', 'component:x-foo -- created subjects are cleaned up
   },
 
   afterTeardown: function() {
-    var subject = this.cache.subject;
+    let subject = this.cache.subject;
 
     ok(subject.isDestroyed);
   }
@@ -134,7 +134,7 @@ moduleFor('component:x-foo', 'component:x-foo -- without needs or `integration: 
 });
 
 test("knows nothing about our non-subject component", function() {
-  var otherComponent = this.container.lookup('component:not-the-subject');
+  let otherComponent = this.container.lookup('component:not-the-subject');
   equal(null, otherComponent, "We shouldn't know about a non-subject component");
 });
 
@@ -144,7 +144,7 @@ moduleFor('component:x-foo', 'component:x-foo -- when needing another component'
 });
 
 test("needs gets us the component we need", function() {
-  var otherComponent = this.container.lookup('component:not-the-subject');
+  let otherComponent = this.container.lookup('component:not-the-subject');
   ok(otherComponent, "another component can be resolved when it's in our needs array");
 });
 
@@ -158,14 +158,14 @@ moduleFor('component:x-foo', 'component:x-foo -- `integration`', {
 });
 
 test("needs is not needed (pun intended) when integration is true", function() {
-  var otherComponent = this.container.lookup('component:not-the-subject');
+  let otherComponent = this.container.lookup('component:not-the-subject');
   ok(otherComponent, 'another component can be resolved when integration is true');
 });
 
 test("throws an error when declaring integration: true and needs in the same module", function() {
   expect(3);
 
-  var result = false;
+  let result = false;
 
   try {
     moduleFor('component:x-foo', {
@@ -182,7 +182,7 @@ test("throws an error when declaring integration: true and needs in the same mod
 test("throws an error when declaring integration: 'legacy' in `moduleFor` test", function() {
   expect(3);
 
-  var result = false;
+  let result = false;
 
   try {
     moduleFor('component:x-foo', {
@@ -205,7 +205,7 @@ if (hasEmberVersion(1,11)) {
   });
 
   test('gets the default by default', function() {
-    var thing = this.container.lookup('foo:thing');
+    let thing = this.container.lookup('foo:thing');
 
     ok(thing.fromDefaultRegistry, 'found from the default registry');
   });
@@ -214,7 +214,7 @@ if (hasEmberVersion(1,11)) {
     this.register('foo:thing', Ember.Object.extend({
       notTheDefault: true
     }));
-    var thing = this.container.lookup('foo:thing');
+    let thing = this.container.lookup('foo:thing');
 
     ok(!thing.fromDefaultRegistry, 'should not be found from the default registry');
     ok(thing.notTheDefault, 'found from the overridden factory');
@@ -225,8 +225,8 @@ if (hasEmberVersion(1,11)) {
       otherThing: Ember.inject.service()
     }));
 
-    var foo = this.container.lookup('foo:needs-service');
-    var thing = foo.get('otherThing');
+    let foo = this.container.lookup('foo:needs-service');
+    let thing = foo.get('otherThing');
 
     ok(thing.fromDefaultRegistry, 'found from the default registry');
   });
@@ -240,8 +240,8 @@ if (hasEmberVersion(1,11)) {
       otherThing: Ember.inject.service()
     }));
 
-    var foo = this.container.lookup('foo:needs-service');
-    var thing = foo.get('otherThing');
+    let foo = this.container.lookup('foo:needs-service');
+    let thing = foo.get('otherThing');
 
     ok(!thing.fromDefaultRegistry, 'should not be found from the default registry');
     ok(thing.notTheDefault, 'found from the overridden factory');
@@ -258,17 +258,17 @@ if (hasEmberVersion(2, 3)) {
   });
 
   test('instances get an owner', function() {
-    var subject = this.subject();
-    var owner = Ember.getOwner(subject);
+    let subject = this.subject();
+    let owner = Ember.getOwner(subject);
 
-    var otherThing = owner.lookup('service:other-thing');
+    let otherThing = owner.lookup('service:other-thing');
     ok(otherThing.fromDefaultRegistry, 'was able to use `getOwner` on an instance and lookup an instance');
   });
 
   test('test context gets an owner', function() {
-    var owner = Ember.getOwner(this);
+    let owner = Ember.getOwner(this);
 
-    var otherThing = owner.lookup('service:other-thing');
+    let otherThing = owner.lookup('service:other-thing');
     ok(otherThing.fromDefaultRegistry, 'was able to use `getOwner` on test context and lookup an instance');
   });
 }
