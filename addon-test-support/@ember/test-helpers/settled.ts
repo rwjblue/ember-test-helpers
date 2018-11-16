@@ -5,6 +5,7 @@ import jQuery from 'jquery';
 import Ember from 'ember';
 import { nextTick } from './-utils';
 import waitUntil from './wait-until';
+import { hasPendingTransition } from './setup-application-context';
 
 // Ember internally tracks AJAX requests in the same way that we do here for
 // legacy style "acceptance" tests using the `ember-testing.js` asset provided
@@ -148,6 +149,7 @@ export interface SettledState {
   hasPendingWaiters: boolean;
   hasPendingRequests: boolean;
   pendingRequestCount: number;
+  hasPendingTransition: boolean | null;
 }
 
 /**
@@ -158,6 +160,8 @@ export interface SettledState {
   - `hasPendingTimers` - Checks if there are scheduled timers in the run-loop.
     These pending timers are primarily registered by `Ember.run.schedule`. If
     there are pending timers, this will be `true`, otherwise `false`.
+  - `hasPendingTransition` - Checks if a route transition is in progress. If there is
+    an active transition, this will be `true`, otherwise `false`.
   - `hasPendingWaiters` - Checks if any registered test waiters are still
     pending (e.g. the waiter returns `true`). If there are pending waiters,
     this will be `true`, otherwise `false`.
@@ -178,6 +182,7 @@ export function getSettledState(): SettledState {
     hasPendingWaiters: checkWaiters(),
     hasPendingRequests: pendingRequestCount > 0,
     pendingRequestCount,
+    hasPendingTransition: hasPendingTransition(),
   };
 }
 
@@ -192,9 +197,21 @@ export function getSettledState(): SettledState {
   @returns {boolean} `true` if settled, `false` otherwise
 */
 export function isSettled(): boolean {
-  let { hasPendingTimers, hasRunLoop, hasPendingRequests, hasPendingWaiters } = getSettledState();
+  let {
+    hasPendingTimers,
+    hasRunLoop,
+    hasPendingRequests,
+    hasPendingWaiters,
+    hasPendingTransition,
+  } = getSettledState();
 
-  if (hasPendingTimers || hasRunLoop || hasPendingRequests || hasPendingWaiters) {
+  if (
+    hasPendingTimers ||
+    hasRunLoop ||
+    hasPendingRequests ||
+    hasPendingWaiters ||
+    hasPendingTransition
+  ) {
     return false;
   }
 

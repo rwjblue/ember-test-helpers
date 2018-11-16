@@ -25,6 +25,7 @@ module('settled', function(hooks) {
             {
               hasPendingRequests: false,
               hasPendingTimers: false,
+              hasPendingTransition: null,
               hasPendingWaiters: false,
               hasRunLoop: false,
               pendingRequestCount: 0,
@@ -151,6 +152,7 @@ module('settled', function(hooks) {
       assert.deepEqual(getSettledState(), {
         hasPendingRequests: false,
         hasPendingTimers: false,
+        hasPendingTransition: null,
         hasPendingWaiters: false,
         hasRunLoop: false,
         pendingRequestCount: 0,
@@ -168,6 +170,7 @@ module('settled', function(hooks) {
       assert.deepEqual(getSettledState(), {
         hasPendingRequests: false,
         hasPendingTimers: true,
+        hasPendingTransition: null,
         hasPendingWaiters: false,
         hasRunLoop: true,
         pendingRequestCount: 0,
@@ -186,6 +189,7 @@ module('settled', function(hooks) {
       assert.deepEqual(getSettledState(), {
         hasPendingRequests: false,
         hasPendingTimers: true,
+        hasPendingTransition: null,
         hasPendingWaiters: false,
         hasRunLoop: false,
         pendingRequestCount: 0,
@@ -204,6 +208,7 @@ module('settled', function(hooks) {
       assert.deepEqual(getSettledState(), {
         hasPendingRequests: false,
         hasPendingTimers: true,
+        hasPendingTransition: null,
         hasPendingWaiters: false,
         hasRunLoop: false,
         pendingRequestCount: 0,
@@ -219,6 +224,7 @@ module('settled', function(hooks) {
         assert.deepEqual(getSettledState(), {
           hasPendingRequests: false,
           hasPendingTimers: false,
+          hasPendingTransition: null,
           hasPendingWaiters: false,
           hasRunLoop: true,
           pendingRequestCount: 0,
@@ -246,6 +252,7 @@ module('settled', function(hooks) {
         assert.deepEqual(getSettledState(), {
           hasPendingRequests: true,
           hasPendingTimers: false,
+          hasPendingTransition: null,
           hasPendingWaiters: false,
           hasRunLoop: false,
           pendingRequestCount: 1,
@@ -254,6 +261,7 @@ module('settled', function(hooks) {
         assert.deepEqual(getSettledState(), {
           hasPendingRequests: false,
           hasPendingTimers: false,
+          hasPendingTransition: null,
           hasPendingWaiters: true,
           hasRunLoop: false,
           pendingRequestCount: 0,
@@ -271,6 +279,7 @@ module('settled', function(hooks) {
       assert.deepEqual(getSettledState(), {
         hasPendingRequests: false,
         hasPendingTimers: false,
+        hasPendingTransition: null,
         hasPendingWaiters: true,
         hasRunLoop: false,
         pendingRequestCount: 0,
@@ -291,6 +300,7 @@ module('settled', function(hooks) {
       assert.deepEqual(getSettledState(), {
         hasPendingRequests: false,
         hasPendingTimers: false,
+        hasPendingTransition: null,
         hasPendingWaiters: true,
         hasRunLoop: false,
         pendingRequestCount: 0,
@@ -300,6 +310,7 @@ module('settled', function(hooks) {
         assert.deepEqual(getSettledState(), {
           hasPendingRequests: false,
           hasPendingTimers: false,
+          hasPendingTransition: null,
           hasPendingWaiters: true,
           hasRunLoop: true,
           pendingRequestCount: 0,
@@ -310,6 +321,7 @@ module('settled', function(hooks) {
         assert.deepEqual(getSettledState(), {
           hasPendingRequests: false,
           hasPendingTimers: true,
+          hasPendingTransition: null,
           hasPendingWaiters: true,
           hasRunLoop: true,
           pendingRequestCount: 0,

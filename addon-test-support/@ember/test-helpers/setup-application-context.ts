@@ -14,6 +14,45 @@ export function isApplicationTestContext(context: BaseContext): context is Appli
   return isTestContext(context);
 }
 
+const CAN_USE_ROUTER_EVENTS = hasEmberVersion(3, 6);
+
+let routerTransitionsPending = false;
+
+export function _resetRouterTransitionPendingState() {
+  routerTransitionsPending = false;
+}
+
+const ROUTER = new WeakMap();
+
+export function hasPendingTransition(): boolean | null {
+  if (CAN_USE_ROUTER_EVENTS) {
+    return routerTransitionsPending;
+  } else {
+    let context = getContext();
+
+    // there is no current context, we cannot check
+    if (context === undefined) {
+      return null;
+    }
+
+    let router = ROUTER.get(context);
+
+    if (router === undefined) {
+      // if there is no router (e.g. no `visit` calls made yet), we cannot
+      // check for pending transitions but this is explicitly not an error
+      // condition
+      return null;
+    }
+
+    let routerMicrolib = router._routerMicrolib || router.router;
+    if (routerMicrolib === undefined) {
+      return null;
+    }
+
+    return !!routerMicrolib.activeTransition;
+  }
+}
+
 /**
   Navigate the application to the provided URL.
 
@@ -32,7 +71,23 @@ export function visit(url: string, options?: { [key: string]: any }): Promise<vo
 
   return nextTickPromise()
     .then(() => {
-      return owner.visit(url, options);
+      let visitResult = owner.visit(url, options);
+
+      if (CAN_USE_ROUTER_EVENTS) {
+        let router = owner.lookup('service:router');
+
+        // track pending transitions via the public routeWillChange / routeDidChange APIs
+        // routeWillChange can fire many times and is only useful to know when we have _started_
+        // transitioning, we can then use routeDidChange to signal that the transition has settled
+        router.on('routeWillChange', () => routerTransitionsPending = true);
+        router.on('routeDidChange', () => routerTransitionsPending = false);
+      } else {
+        let router = owner.lookup('router:main');
+
+        ROUTER.set(context, router);
+      }
+
+      return visitResult;
     })
     .then(() => {
       if (global.EmberENV._APPLICATION_TEMPLATE_WRAPPER !== false) {

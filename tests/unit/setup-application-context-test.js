@@ -2,6 +2,7 @@ import { module, test } from 'qunit';
 import EmberRouter from '@ember/routing/router';
 import Route from '@ember/routing/route';
 import Service from '@ember/service';
+import { Promise } from 'rsvp';
 import {
   setupContext,
   setupApplicationContext,
@@ -23,6 +24,8 @@ Router.map(function() {
   this.route('posts', function() {
     this.route('post', { path: ':post_id' });
   });
+  this.route('links-to-slow');
+  this.route('slow');
 });
 
 module('setupApplicationContext', function(hooks) {
@@ -30,7 +33,7 @@ module('setupApplicationContext', function(hooks) {
     return;
   }
 
-  hooks.beforeEach(async function() {
+  hooks.beforeEach(async function(assert) {
     setResolverRegistry({
       'router:main': Router,
       'template:application': hbs`
@@ -38,6 +41,7 @@ module('setupApplicationContext', function(hooks) {
         {{outlet}}
       `,
       'template:index': hbs`<h1>Hello World!</h1>`,
+      'template:links-to-slow': hbs`{{#link-to 'slow' class="to-slow"}}{{/link-to}}`,
       'template:posts': hbs`<h1>Posts Page</h1>{{outlet}}`,
       'template:posts/post': hbs`<div class="post-id">{{model.post_id}}</div>`,
       'service:foo': Service.extend({ isFoo: true }),
@@ -49,6 +53,18 @@ module('setupApplicationContext', function(hooks) {
       'route:widgets': Route.extend({
         model() {
           throw new Error('Model hook error from /widgets');
+        },
+      }),
+      'route:slow': Route.extend({
+        model() {
+          assert.step('model start');
+
+          return new Promise(resolve => {
+            setTimeout(() => {
+              assert.step('model resolving');
+              resolve();
+            }, 50);
+          });
         },
       }),
     });
@@ -126,5 +142,49 @@ module('setupApplicationContext', function(hooks) {
 
   test('bubbles up errors', function(assert) {
     assert.rejects(visit('/widgets'), /Model hook error from \/widgets/);
+  });
+
+  test('visit waits for async in model hooks', async function(assert) {
+    assert.step('visiting');
+    let visitPromise = visit('/slow');
+    assert.step('after visit invocation');
+
+    await visitPromise;
+
+    assert.step('after visit resolved');
+
+    assert.equal(currentRouteName(), 'slow');
+    assert.equal(currentURL(), '/slow');
+
+    assert.verifySteps([
+      'visiting',
+      'after visit invocation',
+      'model start',
+      'model resolving',
+      'after visit resolved',
+    ]);
+  });
+
+  test('settled waits for async in model hooks after a click', async function(assert) {
+    await visit('/links-to-slow');
+
+    assert.step('before click');
+    let clickPromise = click('.to-slow');
+    assert.step('after click');
+
+    await clickPromise;
+
+    assert.step('after click resolved');
+
+    assert.equal(currentRouteName(), 'slow');
+    assert.equal(currentURL(), '/slow');
+
+    assert.verifySteps([
+      'before click',
+      'after click',
+      'model start',
+      'model resolving',
+      'after click resolved',
+    ]);
   });
 });
